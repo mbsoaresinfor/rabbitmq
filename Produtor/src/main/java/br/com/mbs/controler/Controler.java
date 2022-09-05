@@ -16,20 +16,28 @@ public class Controler {
 	@Autowired
 	private AmqpTemplate rabbitTemplate;
 	
-	@Value("${queue_produto}")
-	String queue_produto;
-
 	@Value("${exchange}")
 	String exchange;
 
-	@Value("${routingkey_produto}")
-	private String routingkey_produto;
+	@Value("${routingkey.marcelo.produto}")
+	private String routingkeyMarceloProduto;
+	
+	@Value("${routingkey.marcelo.produto}")
+	private String routingkeyMarceloNotificacao;
 	
 	@GetMapping(value = "/produtor")
-	public String producer(@RequestParam("mensagem") String mensagem) {
+	public String producer(@RequestParam("fila") String fila,@RequestParam("mensagem") String mensagem) {
 	
-		rabbitTemplate.convertAndSend(exchange, routingkey_produto, mensagem);
+		String routingKey = "";
+		if(fila.endsWith("produto")) {
+			routingKey = routingkeyMarceloProduto;
+		}else if(fila.endsWith("produto")) {
+			routingKey = routingkeyMarceloNotificacao;
+		}
+		
+		rabbitTemplate.convertAndSend(exchange, routingKey, mensagem);
 
-		return "Mensagem enviada com sucesso ao RabbitMQ :)";
+		return "Mensagem enviada com sucesso ao RabbitMQ\n"
+				+ "exchange=" + exchange + ", Fila=" + fila;
 	}
 }

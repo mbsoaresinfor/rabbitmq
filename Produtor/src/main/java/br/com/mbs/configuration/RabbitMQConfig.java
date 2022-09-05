@@ -9,6 +9,7 @@ import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.amqp.support.converter.MessageConverter;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,28 +17,47 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class RabbitMQConfig {
 
-	@Value("${queue_produto}")
-	String queue_produto;
+	@Value("${queue.produto}")
+	String queueProduto;
+	
+	@Value("${queue.notificacao}")
+	String queueNotificacao;
 
 	@Value("${exchange}")
 	String exchange;
 
-	@Value("${routingkey_produto}")
-	private String routingkey_produto;
+	@Value("${routingkey.marcelo.produto}")
+	private String routingkeyMarceloProduto;
+	
+	@Value("${routingkey.marcelo.notificacao}")
+	private String routingkeyMarceloNotificacao;
 
+	
 	@Bean
-	Queue queue() {
-		return new Queue(queue_produto, true);
+	Queue queueProduto() {
+		return new Queue(queueProduto, true);
+	}
+	
+	@Bean
+	Queue queueNotificacao() {
+		return new Queue(queueNotificacao, true);
 	}
 
+	
 	@Bean
-	DirectExchange exchange() {
+	DirectExchange exchangeMarcelo() {
 		return new DirectExchange(exchange);
 	}
 
+	
 	@Bean
-	Binding binding(Queue queue, DirectExchange exchange) {
-		return BindingBuilder.bind(queue).to(exchange).with(routingkey_produto);
+	Binding bindingMarceloProduto() {
+		return BindingBuilder.bind(queueProduto()).to(exchangeMarcelo()).with(routingkeyMarceloProduto);
+	}
+	
+	@Bean
+	Binding bindingMarceloNotificacao() {
+		return BindingBuilder.bind(queueNotificacao()).to(exchangeMarcelo()).with(routingkeyMarceloNotificacao);
 	}
 
 	@Bean
