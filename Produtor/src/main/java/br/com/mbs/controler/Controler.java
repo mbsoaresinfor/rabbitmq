@@ -22,7 +22,7 @@ public class Controler {
 	@Value("${routingkey.marcelo.produto}")
 	private String routingkeyMarceloProduto;
 	
-	@Value("${routingkey.marcelo.produto}")
+	@Value("${routingkey.marcelo.notificacao}")
 	private String routingkeyMarceloNotificacao;
 	
 	@GetMapping(value = "/produtor")
@@ -31,7 +31,7 @@ public class Controler {
 		String routingKey = "";
 		if(fila.endsWith("produto")) {
 			routingKey = routingkeyMarceloProduto;
-		}else if(fila.endsWith("produto")) {
+		}else if(fila.endsWith("notificacao")) {
 			routingKey = routingkeyMarceloNotificacao;
 		}
 		
