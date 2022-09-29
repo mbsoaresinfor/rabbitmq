@@ -20,8 +20,8 @@ public class RabbitMQConfig {
 	@Value("${queue.produto}")
 	String queueProduto;
 	
-	@Value("${queue.notificacao}")
-	String queueNotificacao;
+	@Value("${queue.email}")
+	String queueEmail;
 
 	@Value("${exchange}")
 	String exchange;
@@ -29,8 +29,8 @@ public class RabbitMQConfig {
 	@Value("${routingkey.marcelo.produto}")
 	private String routingkeyMarceloProduto;
 	
-	@Value("${routingkey.marcelo.notificacao}")
-	private String routingkeyMarceloNotificacao;
+	@Value("${routingkey.marcelo.email}")
+	private String routingkeyMarceloEmail;
 
 	
 	@Bean
@@ -39,8 +39,8 @@ public class RabbitMQConfig {
 	}
 	
 	@Bean
-	Queue queueNotificacao() {
-		return new Queue(queueNotificacao, true);
+	Queue queueEmail() {
+		return new Queue(queueEmail, true);
 	}
 
 	
@@ -56,8 +56,8 @@ public class RabbitMQConfig {
 	}
 	
 	@Bean
-	Binding bindingMarceloNotificacao() {
-		return BindingBuilder.bind(queueNotificacao()).to(exchangeMarcelo()).with(routingkeyMarceloNotificacao);
+	Binding bindingMarceloEmail() {
+		return BindingBuilder.bind(queueEmail()).to(exchangeMarcelo()).with(routingkeyMarceloEmail);
 	}
 
 	@Bean
