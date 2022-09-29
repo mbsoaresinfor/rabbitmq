@@ -7,10 +7,15 @@ O RabbiMQ deve ter uma exchange do tipo direct chamada "marcelo", e mais duas fi
 Deve ser criado as seguintes routing-key
 
 EXCHANGE->FILA   = ROUTING-KEY
+
 marcelo->produto = marcelo-key-produto
+
 marcelo->email   = marcelo-key-email
+
 marcelo->produto = marcelo-key
+
 marcelo->email   = marcelo-key
+
 
 
 
