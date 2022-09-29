@@ -17,6 +17,20 @@ marcelo->produto = marcelo-key
 marcelo->email   = marcelo-key
 
 
+EndPoint para enviar mensagens para a exchange e filas especificas
+
+ENVIA PARA TODAS AS FILAS (EMAIL, PRODUTO)
+
+http://localhost:8081/produtor/exchange/{MENSAGEM}
+
+ENVIA PARA A FILA EMAIL
+http://localhost:8081/produtor/exchange/email/{MENSAGEM}
+
+ENVIA PARA A FILA PRODUTO
+http://localhost:8081/produtor/exchange/produto/{MENSAGEM}
+
+
+
 
 
 
