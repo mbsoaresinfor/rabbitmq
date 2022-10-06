@@ -17,17 +17,19 @@ public class Controler {
 	@Autowired
 	private AmqpTemplate rabbitTemplate;
 	
-	@Value("${exchange}")
-	String exchange;
+	@Value("${exchange.compra.direct}")
+	String exchangeCompraDirect;
+	
+	@Value("${exchange.compra.fanout}")
+	String exchangeCompraFanout;
 
-	@Value("${routingkey.marcelo.produto}")
-	private String routingkeyMarceloProduto;
+	@Value("${routingkey.compra.produto}")
+	private String routingkeyCompraProduto;
 	
-	@Value("${routingkey.marcelo.email}")
-	private String routingkeyMarceloEmail;
+	@Value("${routingkey.email.produto}")
+	private String routingkeyEmailProduto;
 	
-	@Value("${routingkey.marcelo}")
-	private String routingkeyMarcelo;
+	
 	
 	
 	
@@ -37,23 +39,23 @@ public class Controler {
 	
 		String routingKey = "";
 		if(fila.endsWith("produto")) {
-			routingKey = routingkeyMarceloProduto;
+			routingKey = routingkeyCompraProduto;
 		}else if(fila.endsWith("email")) {
-			routingKey = routingkeyMarceloEmail;
+			routingKey = routingkeyEmailProduto;
 		}
 		
-		rabbitTemplate.convertAndSend(exchange, routingKey, mensagem);
+		rabbitTemplate.convertAndSend(exchangeCompraDirect, routingKey, mensagem);
 
 		return "Mensagem enviada com sucesso ao RabbitMQ\n"
-				+ "exchange=" + exchange + ", Fila=" + fila + ", mensagem=" + mensagem;
+				+ "exchange=" + exchangeCompraDirect + ", Fila=" + fila + ", mensagem=" + mensagem;
 	}
 	
 	@GetMapping(value = "/produtor/exchange/{mensagem}")
 	public String enviaMensagemParaExchange(@PathVariable("mensagem") String mensagem) {
 		
-		rabbitTemplate.convertAndSend(exchange, routingkeyMarcelo, mensagem);
+		rabbitTemplate.convertAndSend(exchangeCompraFanout, "", mensagem);
 
 		return "Mensagem enviada com sucesso ao RabbitMQ\n"
-				+ "exchange=" + exchange +", mensagem= " + mensagem;
+				+ "exchange=" + exchangeCompraFanout +", mensagem= " + mensagem;
 	}
 }

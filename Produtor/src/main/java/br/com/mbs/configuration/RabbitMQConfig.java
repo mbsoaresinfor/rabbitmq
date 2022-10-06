@@ -4,6 +4,7 @@ import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.BindingBuilder;
 import org.springframework.amqp.core.DirectExchange;
+import org.springframework.amqp.core.FanoutExchange;
 import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -23,14 +24,17 @@ public class RabbitMQConfig {
 	@Value("${queue.email}")
 	String queueEmail;
 
-	@Value("${exchange}")
-	String exchange;
-
-	@Value("${routingkey.marcelo.produto}")
-	private String routingkeyMarceloProduto;
+	@Value("${exchange.compra.direct}")
+	String exchangeCompraDirect;
 	
-	@Value("${routingkey.marcelo.email}")
-	private String routingkeyMarceloEmail;
+	@Value("${exchange.compra.fanout}")
+	String exchangeCompraFanout;
+	
+	@Value("${routingkey.compra.produto}")
+	private String routingkeyCompraProduto;
+	
+	@Value("${routingkey.email.produto}")
+	private String routingkeyEmailProduto;
 
 	
 	@Bean
@@ -45,20 +49,41 @@ public class RabbitMQConfig {
 
 	
 	@Bean
-	DirectExchange exchangeMarcelo() {
-		return new DirectExchange(exchange);
+	DirectExchange exchangeCompraDirect() {
+		return new DirectExchange(exchangeCompraDirect);
+	}
+	
+	@Bean
+	FanoutExchange exchangeCompraFanout() {
+		return new FanoutExchange(exchangeCompraFanout);
 	}
 
 	
 	@Bean
-	Binding bindingMarceloProduto() {
-		return BindingBuilder.bind(queueProduto()).to(exchangeMarcelo()).with(routingkeyMarceloProduto);
+	Binding bindingCompraDirectProduto() {
+		return BindingBuilder.bind(queueProduto()).
+				to(exchangeCompraDirect()).with(routingkeyCompraProduto);
 	}
 	
 	@Bean
-	Binding bindingMarceloEmail() {
-		return BindingBuilder.bind(queueEmail()).to(exchangeMarcelo()).with(routingkeyMarceloEmail);
+	Binding bindingCompraDirectEmail() {
+		return BindingBuilder.bind(queueEmail()).
+				to(exchangeCompraDirect()).with(routingkeyEmailProduto);
 	}
+
+
+	@Bean
+	Binding bindingCompraFanoutProduto() {
+		return BindingBuilder.bind(queueProduto()).
+				to(exchangeCompraFanout());
+	}
+	
+	@Bean
+	Binding bindingCompraFanoutEmail() {
+		return BindingBuilder.bind(queueEmail()).
+				to(exchangeCompraFanout());
+	}
+	
 
 	@Bean
 	public MessageConverter jsonMessageConverter() {
